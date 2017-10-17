@@ -6,9 +6,9 @@ namespace OakNotes.DataLayer
 {
     public interface INotesRepository
     {
-        Note Create(User owner, string title, string texte);
+        Note Create(Note note);
         void Delete(Guid id);
-        Note Update(Guid noteId, string title, string text);
+        Note Update(Note note);
         Note Get(Guid noteId);
         void Share(Guid noteId, Guid userId);
         void Unshare(Guid noteId, Guid userId);

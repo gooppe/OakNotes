@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using OakNotes.Model;
 
 namespace OakNotes.DataLayer.Sql.Tests
 {
@@ -15,16 +16,22 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldCreateCategory()
         {
             //arrange
-            var userName = "test";
-            var categoryName = "test_cat";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var userRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var userRepository = new Users(_connectionString, categoriesRepository);
 
-            var createdUser = userRepository.Create(userName);
+            var createdUser = userRepository.Create(user);
             _tempUsers.Add(createdUser.Id);
-            var createdCategory = categoriesRepository.Create(createdUser.Id, categoryName);
+            var createdCategory = categoriesRepository.Create(category, user.Id);
             var selectedCategory = categoriesRepository.Get(createdCategory.Id);
 
             //assert
@@ -35,16 +42,22 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldDeleteCategory()
         {
             //arrange
-            var userName = "test";
-            var categoryName = "test_cat";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var userRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var userRepository = new Users(_connectionString, categoriesRepository);
 
-            var createdUser = userRepository.Create(userName);
+            var createdUser = userRepository.Create(user);
             _tempUsers.Add(createdUser.Id);
-            var createdCategory = categoriesRepository.Create(createdUser.Id, categoryName);
+            var createdCategory = categoriesRepository.Create(category, user.Id);
 
             categoriesRepository.Delete(createdCategory.Id);
 
@@ -56,19 +69,30 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldAssignCategoryToNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var categoryName = "Test category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
+            var note = new Note()
+            {
+                Title = "test_note",
+                Text = "test_text",
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, string.Empty);
-            var category = categoriesRepository.Create(user.Id, categoryName);
+            note.Owner = user;
+            var createdNote = notesRepository.Create(note);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
             categoriesRepository.Assign(note.Id, category.Id);
 
             var selectedCategories = categoriesRepository.GetNoteCategories(note.Id);
@@ -81,23 +105,34 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldDissociateCategoryNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var categoryName = "Test category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
+            var note = new Note()
+            {
+                Title = "test_note",
+                Text = "test_text",
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, string.Empty);
-            var category = categoriesRepository.Create(user.Id, categoryName);
-            categoriesRepository.Assign(note.Id, category.Id);
-            categoriesRepository.Dissociate(note.Id, category.Id);
+            note.Owner = createdUser; 
+            var createdNote = notesRepository.Create(note);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
+            categoriesRepository.Assign(createdNote.Id, createdCategory.Id);
+            categoriesRepository.Dissociate(createdNote.Id, createdCategory.Id);
 
-            var selectedCategories = categoriesRepository.GetNoteCategories(note.Id);
+            var selectedCategories = categoriesRepository.GetNoteCategories(createdNote.Id);
 
             //assert
             Assert.IsTrue(!selectedCategories.Any());
@@ -107,22 +142,33 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldGetNoteCategories()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var categoryName = "Test category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
+            var note = new Note()
+            {
+                Title = "test_note",
+                Text = "test_text",
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, string.Empty);
-            var category = categoriesRepository.Create(user.Id, categoryName);
-            categoriesRepository.Assign(note.Id, category.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
+            categoriesRepository.Assign(createdNote.Id, createdCategory.Id);
 
-            var selectedCategories = categoriesRepository.GetNoteCategories(note.Id);
+            var selectedCategories = categoriesRepository.GetNoteCategories(createdNote.Id);
 
             //assert
             Assert.AreEqual(category.Name, selectedCategories.Single().Name);
@@ -132,18 +178,24 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldGetUserCategories()
         {
             //arrange
-            var userName = "test";
-            var categoryName = "Test category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(user.Id);
-            var category = categoriesRepository.Create(user.Id, categoryName);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
 
-            var userCategories = categoriesRepository.GetUserCategories(user.Id);
+            var userCategories = categoriesRepository.GetUserCategories(createdUser.Id);
 
             //assert
             Assert.AreEqual(category.Name, userCategories.Single().Name);
@@ -153,24 +205,29 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldUpdateCategory()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var categoryName = "Test category";
-            var changedCategoryName = "Changed name";
+            var user = new User()
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "test_cat"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(user.Id);
-            var category = categoriesRepository.Create(user.Id, categoryName);
-            categoriesRepository.Update(category.Id, changedCategoryName);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
+            createdCategory.Name = "Changed Name";
+            categoriesRepository.Update(createdCategory);
 
             var updatedCategory = categoriesRepository.Get(category.Id);
 
             //assert
-            Assert.AreEqual(changedCategoryName, updatedCategory.Name);
+            Assert.AreEqual("Changed Name", updatedCategory.Name);
         }
 
         [TestCleanup]
@@ -178,7 +235,7 @@ namespace OakNotes.DataLayer.Sql.Tests
         {
             foreach(var user in _tempUsers)
             {
-                new UsersRepository(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
+                new Users(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
             }
         }
     }

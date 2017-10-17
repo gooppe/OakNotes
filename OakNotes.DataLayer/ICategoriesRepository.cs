@@ -6,8 +6,8 @@ namespace OakNotes.DataLayer
 {
     public interface ICategoriesRepository
     {
-        Category Create(Guid userId, string name);
-        Category Update(Guid categoryId, string name);
+        Category Create(Category category, Guid userId);
+        Category Update(Category category);
         Category Get(Guid categoryId);
         void Delete(Guid id);
         void Assign(Guid noteId, Guid categoryId);

@@ -22,8 +22,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             };
 
             //act
-            var userRepository = new UsersRepository(_connectionString, new CategoriesRepository(_connectionString));
-            user = userRepository.Create(user.Name);
+            var userRepository = new Users(_connectionString, new CategoriesRepository(_connectionString));
+            user = userRepository.Create(user);
             _tempUsers.Add(user.Id);
             var createdUser = userRepository.Get(user.Id);
 
@@ -35,11 +35,14 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldDeleteUser()
         {
             //arrange
-            string userName = "test";
+            var user = new User
+            {
+                Name = "test"
+            };
 
             //act
-            var userRepository = new UsersRepository(_connectionString, new CategoriesRepository(_connectionString));
-            var user = userRepository.Create(userName);
+            var userRepository = new Users(_connectionString, new CategoriesRepository(_connectionString));
+            user = userRepository.Create(user);
             _tempUsers.Add(user.Id);
             userRepository.Delete(user.Id);
             
@@ -51,16 +54,22 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldCreateUserAndAddCategory()
         {
             //arrange
-            string userName = "test";
-            string category = "MyFirstCategory";
+            var user = new User
+            {
+                Name = "test"
+            };
+            var category = new Category()
+            {
+                Name = "Test category"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
 
-            var createdUser = usersRepository.Create(userName);
+            var createdUser = usersRepository.Create(user);
             _tempUsers.Add(createdUser.Id);
-            var createdCategory = categoriesRepository.Create(createdUser.Id, category);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
             createdUser = usersRepository.Get(createdUser.Id);
 
             //assert
@@ -72,7 +81,7 @@ namespace OakNotes.DataLayer.Sql.Tests
         {
             foreach (var user in _tempUsers)
             {
-                new UsersRepository(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
+                new Users(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
             }
         }
     }

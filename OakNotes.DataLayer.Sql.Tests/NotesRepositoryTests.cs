@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using OakNotes.Model;
 
 namespace OakNotes.DataLayer.Sql.Tests
 {
@@ -15,98 +16,133 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldCreateNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            var createdNote = notesRepository.Get(note.Id);
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            var selectedNote = notesRepository.Get(createdNote.Id);
 
             //assert
-            Assert.AreEqual(note.Title, createdNote.Title);
+            Assert.AreEqual(note.Title, selectedNote.Title);
         }
 
         [TestMethod]
         public void ShouldDeleteNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Delete(note.Id);
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            notesRepository.Delete(createdNote.Id);
 
             //assert
-            Assert.ThrowsException<ArgumentException>(() => notesRepository.Get(note.Id));
+            Assert.ThrowsException<ArgumentException>(() => notesRepository.Get(createdNote.Id));
         }
 
         [TestMethod]
         public void ShouldUpdateNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
-            var updatedNoteTitle = "Updated Test Note";
-            var updatedNoteText = "Updated Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var updatedNote = new Note()
+            {
+                Title = "Updated Test note",
+                Text = "Updated Test text"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            _tempUsers.Add(user.Id);
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Update(note.Id, updatedNoteTitle, updatedNoteText);
-            var createdNote = notesRepository.Get(note.Id);
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            updatedNote.Id = createdNote.Id;
+            notesRepository.Update(updatedNote);
+            var selectedNote = notesRepository.Get(updatedNote.Id);
 
             //assert
-            Assert.AreEqual(updatedNoteText, createdNote.Text);
+            Assert.AreEqual(updatedNote.Text, selectedNote.Text);
         }
 
         [TestMethod]
         public void ShouldShareNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
-            var secondUserName = "test2";
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
 
+            var secondUser = new User()
+            {
+                Name = "second user"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            var secondUser = usersRepository.Create(secondUserName);
-            _tempUsers.Add(user.Id);
-            _tempUsers.Add(secondUser.Id);
-
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Share(note.Id, secondUser.Id);
-            var sharedNotes = notesRepository.GetSharedNotes(secondUser.Id);
+            var createdUser = usersRepository.Create(user);
+            var createdSecondUser = usersRepository.Create(secondUser);
+            _tempUsers.Add(createdUser.Id);
+            _tempUsers.Add(createdSecondUser.Id);
+            note.Owner = user;
+            var createdNote = notesRepository.Create(note);
+            notesRepository.Share(createdNote.Id, createdSecondUser.Id);
+            var sharedNotes = notesRepository.GetSharedNotes(createdSecondUser.Id);
 
             //assert
             Assert.AreEqual(note.Title, sharedNotes.Single().Title);
@@ -116,28 +152,39 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldUnshareNote()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
-            var secondUserName = "test2";
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var secondUser = new User()
+            {
+                Name = "second user"
+            };
 
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            var secondUser = usersRepository.Create(secondUserName);
-            _tempUsers.Add(user.Id);
-            _tempUsers.Add(secondUser.Id);
+            var createdUser = usersRepository.Create(user);
+            var createdSecondUser = usersRepository.Create(secondUser);
+            _tempUsers.Add(createdUser.Id);
+            _tempUsers.Add(createdSecondUser.Id);
 
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Share(note.Id, secondUser.Id);
-            notesRepository.Unshare(note.Id, secondUser.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            notesRepository.Share(createdNote.Id, createdSecondUser.Id);
+            notesRepository.Unshare(createdNote.Id, createdSecondUser.Id);
 
-            var sharedNotes = notesRepository.GetSharedNotes(secondUser.Id);
+            var sharedNotes = notesRepository.GetSharedNotes(createdSecondUser.Id);
 
             //assert
             Assert.IsTrue(!sharedNotes.Any());
@@ -147,26 +194,37 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldGetSharedNotes()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
-            var secondUserName = "test2";
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var secondUser = new User()
+            {
+                Name = "second user"
+            };
 
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            var secondUser = usersRepository.Create(secondUserName);
-            _tempUsers.Add(user.Id);
-            _tempUsers.Add(secondUser.Id);
+            var createdUser = usersRepository.Create(user);
+            var createdSecondUser = usersRepository.Create(secondUser);
+            _tempUsers.Add(createdUser.Id);
+            _tempUsers.Add(createdSecondUser.Id);
 
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Share(note.Id, secondUser.Id);
-            var sharedNotes = notesRepository.GetSharedNotes(secondUser.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            notesRepository.Share(createdNote.Id, createdSecondUser.Id);
+            var sharedNotes = notesRepository.GetSharedNotes(createdSecondUser.Id);
 
             //assert
             Assert.AreEqual(note.Title, sharedNotes.Single().Title);
@@ -176,24 +234,36 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldGetCategoryNotes()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
-            var categoryNote = "Test Category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var category = new Category()
+            {
+                Name = "Test Category"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            _tempUsers.Add(user.Id);
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
 
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            var category = categoriesRepository.Create(user.Id, categoryNote);
-            categoriesRepository.Assign(note.Id, category.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
+            categoriesRepository.Assign(createdNote.Id, createdCategory.Id);
 
-            var categoryNotes = notesRepository.GetCategoryNotes(category.Id);
+            var categoryNotes = notesRepository.GetCategoryNotes(createdCategory.Id);
 
             //assert
             Assert.AreEqual(note.Title, categoryNotes.Single().Title);
@@ -203,55 +273,78 @@ namespace OakNotes.DataLayer.Sql.Tests
         public void ShouldLoadNoteCategories()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
-            var categoryNote = "Test Category";
+            var user = new User()
+            {
+                Name = "test"
+            };
+
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var category = new Category()
+            {
+                Name = "Test Category"
+            };
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            _tempUsers.Add(user.Id);
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
 
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            var category = categoriesRepository.Create(user.Id, categoryNote);
-            categoriesRepository.Assign(note.Id, category.Id);
-            note = notesRepository.Get(note.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            var createdCategory = categoriesRepository.Create(category, createdUser.Id);
+            categoriesRepository.Assign(createdNote.Id, createdCategory.Id);
+            note = notesRepository.Get(createdNote.Id);
 
             //assert
-            Assert.AreEqual(categoryNote, note.Categories.Single().Name);
+            Assert.AreEqual(category.Name, note.Categories.Single().Name);
         }
 
         [TestMethod]
         public void ShouldLoadNoteShares()
         {
             //arrange
-            var userName = "test";
-            var noteTitle = "Test Note";
-            var noteText = "Test Text";
+            var user = new User()
+            {
+                Name = "test"
+            };
 
-            var secondUserName = "test2";
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            var secondUser = new User()
+            {
+                Name = "second user"
+            };
 
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var usersRepository = new Users(_connectionString, categoriesRepository);
             var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
 
-            var user = usersRepository.Create(userName);
-            var secondUser = usersRepository.Create(secondUserName);
-            _tempUsers.Add(user.Id);
-            _tempUsers.Add(secondUser.Id);
+            var createdUser = usersRepository.Create(user);
+            var createdSecondUser = usersRepository.Create(secondUser);
+            _tempUsers.Add(createdUser.Id);
+            _tempUsers.Add(createdSecondUser.Id);
 
-            var note = notesRepository.Create(user, noteTitle, noteText);
-            notesRepository.Share(note.Id, secondUser.Id);
-            note = notesRepository.Get(note.Id);
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            notesRepository.Share(createdNote.Id, createdSecondUser.Id);
+            note = notesRepository.Get(createdNote.Id);
 
             //assert
-            Assert.AreEqual(secondUserName, note.Shares.Single().Name);
+            Assert.AreEqual(secondUser.Name, note.Shares.Single().Name);
         }
 
         [TestCleanup]
@@ -259,7 +352,7 @@ namespace OakNotes.DataLayer.Sql.Tests
         {
             foreach(var user in _tempUsers)
             {
-                new UsersRepository(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
+                new Users(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
             }
         }
     }
