@@ -8,10 +8,10 @@ namespace OakNotes.DataLayer.Sql
     public class NotesRepository : INotesRepository
     {
         private readonly string _connectionString;
-        private readonly UsersRepository _usersRepository;
-        private readonly CategoriesRepository _categoriesRepository;
+        private readonly IUsersRepository _usersRepository;
+        private readonly ICategoriesRepository _categoriesRepository;
 
-        public NotesRepository(string connectionString, UsersRepository usersRepository, CategoriesRepository categoriesRepository)
+        public NotesRepository(string connectionString, IUsersRepository usersRepository, ICategoriesRepository categoriesRepository)
         {
             _connectionString = connectionString;
             _usersRepository = usersRepository;
