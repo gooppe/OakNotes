@@ -33,8 +33,8 @@ namespace OakNotes.DataLayer.Sql
                     note.Created = DateTime.Now;
                     note.Updated = DateTime.Now;
                     note.Id = Guid.NewGuid();
+                    note.Owner = _usersRepository.Get(note.Owner.Id);
 
-                    note.Id = Guid.NewGuid();
                     sqlCommand.CommandText = "insert into notes (id, ownerId, title, text, created, updated) values (@id, @ownerId, @title, @text, @created, @updated)";
                     sqlCommand.Parameters.AddWithValue("@id", note.Id);
                     sqlCommand.Parameters.AddWithValue("@ownerId", note.Owner.Id);
@@ -56,6 +56,7 @@ namespace OakNotes.DataLayer.Sql
         /// <param name="id">Note id</param>
         public void Delete(Guid id)
         {
+            DeleteAllCategoriesOfNote(id);
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
@@ -194,24 +195,24 @@ namespace OakNotes.DataLayer.Sql
                 sqlConnection.Open();
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
-                    sqlCommand.CommandText = "select noteId, ownerId, title, text, created, updated from shares inner join notes on shares.noteId = notes.id where userId = @userId";
+                    sqlCommand.CommandText = "select id, ownerId, title, text, created, updated from notes where ownerId = @userId";
                     sqlCommand.Parameters.AddWithValue("@userId", userId);
 
                     using (var reader = sqlCommand.ExecuteReader())
                     {
+                        var user = _usersRepository.Get(userId);
                         while (reader.Read())
                         {
-                            var user = _usersRepository.Get(reader.GetGuid(reader.GetOrdinal("ownerId")));
                             yield return new Note
                             {
-                                Id = reader.GetGuid(reader.GetOrdinal("noteId")),
+                                Id = reader.GetGuid(reader.GetOrdinal("id")),
                                 Owner = user,
                                 Title = reader.GetString(reader.GetOrdinal("title")),
                                 Text = reader.GetString(reader.GetOrdinal("text")),
                                 Created = reader.GetDateTime(reader.GetOrdinal("created")),
                                 Updated = reader.GetDateTime(reader.GetOrdinal("updated")),
-                                Categories = _categoriesRepository.GetNoteCategories(reader.GetGuid(reader.GetOrdinal("noteId"))),
-                                Shares = _usersRepository.GetNoteShares(reader.GetGuid(reader.GetOrdinal("noteId")))
+                                Categories = _categoriesRepository.GetNoteCategories(reader.GetGuid(reader.GetOrdinal("id"))),
+                                Shares = _usersRepository.GetNoteShares(reader.GetGuid(reader.GetOrdinal("id")))
                             };
                         }
                     }
@@ -283,6 +284,21 @@ namespace OakNotes.DataLayer.Sql
                     sqlCommand.ExecuteNonQuery();
 
                     return Get(note.Id);
+                }
+            }
+        }
+
+        private void DeleteAllCategoriesOfNote(Guid noteId)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                using (var sqlCommand = sqlConnection.CreateCommand())
+                {
+                    sqlCommand.CommandText = "delete from notecategories where noteId = @id";
+                    sqlCommand.Parameters.AddWithValue("@id", noteId);
+
+                    sqlCommand.ExecuteNonQuery();
                 }
             }
         }

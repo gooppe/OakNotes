@@ -45,6 +45,7 @@ namespace OakNotes.DataLayer.Sql
         /// <param name="id">User id</param>
         public void Delete(Guid id)
         {
+            DeleteAllShareds(id);
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
@@ -120,6 +121,20 @@ namespace OakNotes.DataLayer.Sql
                             yield return user; 
                         }
                     }
+                }
+            }
+        }
+
+        private void DeleteAllShareds(Guid userId)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                using (var command = sqlConnection.CreateCommand())
+                {
+                    command.CommandText = "delete from shares where userId = @id";
+                    command.Parameters.AddWithValue("@id", userId);
+                    command.ExecuteNonQuery();
                 }
             }
         }

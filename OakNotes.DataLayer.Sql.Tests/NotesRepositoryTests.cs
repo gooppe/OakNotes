@@ -347,6 +347,37 @@ namespace OakNotes.DataLayer.Sql.Tests
             Assert.AreEqual(secondUser.Name, note.Shares.Single().Name);
         }
 
+        [TestMethod]
+        public void ShouldGetUserNotes()
+        {
+            //arrange
+            var user = new User()
+            {
+                Name = "test"
+            };
+
+            var note = new Note()
+            {
+                Title = "Test note",
+                Text = "Test text"
+            };
+
+            //act
+            var categoriesRepository = new CategoriesRepository(_connectionString);
+            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
+            var notesRepository = new Sql.NotesRepository(_connectionString, usersRepository, categoriesRepository);
+
+            var createdUser = usersRepository.Create(user);
+            _tempUsers.Add(createdUser.Id);
+
+            note.Owner = createdUser;
+            var createdNote = notesRepository.Create(note);
+            var selectedNotes = notesRepository.GetUserNotes(createdUser.Id);
+
+            //assert
+            Assert.AreEqual(createdNote.Title, selectedNotes.Single().Title);
+        }
+
         [TestCleanup]
         public void CleanData()
         {
