@@ -5,12 +5,12 @@ using OakNotes.Model;
 
 namespace OakNotes.DataLayer.Sql
 {
-    public class UsersRepository : IUsersRepository
+    public class Users : IUsersRepository
     {
         private readonly string _connectionString;
         private readonly ICategoriesRepository _categoriesRepository;
 
-        public UsersRepository(string connectionString, ICategoriesRepository categoriesRepository)
+        public Users(string connectionString, ICategoriesRepository categoriesRepository)
         {
             _connectionString = connectionString;
             _categoriesRepository = categoriesRepository;
@@ -21,18 +21,14 @@ namespace OakNotes.DataLayer.Sql
         /// </summary>
         /// <param name="user">New User</param>
         /// <returns></returns>
-        public User Create(string name)
+        public User Create(User user)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
                 using (var command = sqlConnection.CreateCommand())
                 {
-                    var user = new User
-                    {
-                        Id = Guid.NewGuid(),
-                        Name = name
-                    };
+                    user.Id = Guid.NewGuid();
                         
                     command.CommandText = "insert into users (id, name) values (@id, @name)";
                     command.Parameters.AddWithValue("@id", user.Id);

@@ -8,10 +8,10 @@ namespace OakNotes.DataLayer.Sql
     public class NotesRepository : INotesRepository
     {
         private readonly string _connectionString;
-        private readonly UsersRepository _usersRepository;
+        private readonly Users _usersRepository;
         private readonly CategoriesRepository _categoriesRepository;
 
-        public NotesRepository(string connectionString, UsersRepository usersRepository, CategoriesRepository categoriesRepository)
+        public NotesRepository(string connectionString, Users usersRepository, CategoriesRepository categoriesRepository)
         {
             _connectionString = connectionString;
             _usersRepository = usersRepository;
@@ -23,22 +23,16 @@ namespace OakNotes.DataLayer.Sql
         /// </summary>
         /// <param name="note">Note</param>
         /// <returns>Created note</returns>
-        public Note Create(User owner, string title, string text)
+        public Note Create(Note note)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
-                    var note = new Note
-                    {
-                        Id = Guid.NewGuid(),
-                        Owner = owner,
-                        Title = title,
-                        Text = text,
-                        Created = DateTime.Now,
-                        Updated = DateTime.Now
-                    };
+                    note.Created = DateTime.Now;
+                    note.Updated = DateTime.Now;
+                    note.Id = Guid.NewGuid();
 
                     note.Id = Guid.NewGuid();
                     sqlCommand.CommandText = "insert into notes (id, ownerId, title, text, created, updated) values (@id, @ownerId, @title, @text, @created, @updated)";
@@ -273,7 +267,7 @@ namespace OakNotes.DataLayer.Sql
         /// <param name="noteId">Note id</param>
         /// <param name="title">New title</param>
         /// <param name="text">New text</param>
-        public Note Update(Guid noteId, string title, string text)
+        public Note Update(Note note)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -281,14 +275,14 @@ namespace OakNotes.DataLayer.Sql
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
                     sqlCommand.CommandText = "update notes set title = @title, text = @text, updated = @updated where id = @id";
-                    sqlCommand.Parameters.AddWithValue("@id", noteId);
-                    sqlCommand.Parameters.AddWithValue("@title", title);
-                    sqlCommand.Parameters.AddWithValue("@text", text);
+                    sqlCommand.Parameters.AddWithValue("@id", note.Id);
+                    sqlCommand.Parameters.AddWithValue("@title", note.Title);
+                    sqlCommand.Parameters.AddWithValue("@text", note.Text);
                     sqlCommand.Parameters.AddWithValue("@updated", DateTime.Now);
 
                     sqlCommand.ExecuteNonQuery();
 
-                    return Get(noteId);
+                    return Get(note.Id);
                 }
             }
         }

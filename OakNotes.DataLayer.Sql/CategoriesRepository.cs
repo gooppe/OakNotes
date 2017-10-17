@@ -20,17 +20,13 @@ namespace OakNotes.DataLayer.Sql
         /// <param name="userId">Category owner</param>
         /// <param name="name">Name of category</param>
         /// <returns></returns>
-        public Category Create(Guid userId, string name)
+        public Category Create(Category category, Guid userId)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 sqlConnection.Open();
 
-                var category = new Category
-                {
-                    Id = Guid.NewGuid(),
-                    Name = name
-                };
+                category.Id = Guid.NewGuid();
 
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
@@ -206,7 +202,7 @@ namespace OakNotes.DataLayer.Sql
         /// <param name="categoryId">Category id</param>
         /// <param name="name">Category name</param>
         /// <returns>Updated category</returns>
-        public Category Update(Guid categoryId, string name)
+        public Category Update(Category category)
         {
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
@@ -214,14 +210,14 @@ namespace OakNotes.DataLayer.Sql
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
                     sqlCommand.CommandText = "update categories set name = @name where id = @id";
-                    sqlCommand.Parameters.AddWithValue("@id", categoryId);
-                    sqlCommand.Parameters.AddWithValue("@name", name);
+                    sqlCommand.Parameters.AddWithValue("@id", category.Id);
+                    sqlCommand.Parameters.AddWithValue("@name", category.Name);
 
                     sqlCommand.ExecuteNonQuery();
                 }
             }
 
-            return Get(categoryId);
+            return Get(category.Id);
         }
     }
 }
