@@ -5,12 +5,12 @@ using OakNotes.Model;
 
 namespace OakNotes.DataLayer.Sql
 {
-    public class Users : IUsersRepository
+    public class UsersRepository : IUsersRepository
     {
         private readonly string _connectionString;
         private readonly ICategoriesRepository _categoriesRepository;
 
-        public Users(string connectionString, ICategoriesRepository categoriesRepository)
+        public UsersRepository(string connectionString, ICategoriesRepository categoriesRepository)
         {
             _connectionString = connectionString;
             _categoriesRepository = categoriesRepository;

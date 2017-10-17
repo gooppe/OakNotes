@@ -22,7 +22,7 @@ namespace OakNotes.DataLayer.Sql.Tests
             };
 
             //act
-            var userRepository = new Users(_connectionString, new CategoriesRepository(_connectionString));
+            var userRepository = new UsersRepository(_connectionString, new CategoriesRepository(_connectionString));
             user = userRepository.Create(user);
             _tempUsers.Add(user.Id);
             var createdUser = userRepository.Get(user.Id);
@@ -41,7 +41,7 @@ namespace OakNotes.DataLayer.Sql.Tests
             };
 
             //act
-            var userRepository = new Users(_connectionString, new CategoriesRepository(_connectionString));
+            var userRepository = new UsersRepository(_connectionString, new CategoriesRepository(_connectionString));
             user = userRepository.Create(user);
             _tempUsers.Add(user.Id);
             userRepository.Delete(user.Id);
@@ -65,7 +65,7 @@ namespace OakNotes.DataLayer.Sql.Tests
 
             //act
             var categoriesRepository = new CategoriesRepository(_connectionString);
-            var usersRepository = new Users(_connectionString, categoriesRepository);
+            var usersRepository = new UsersRepository(_connectionString, categoriesRepository);
 
             var createdUser = usersRepository.Create(user);
             _tempUsers.Add(createdUser.Id);
@@ -81,7 +81,7 @@ namespace OakNotes.DataLayer.Sql.Tests
         {
             foreach (var user in _tempUsers)
             {
-                new Users(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
+                new UsersRepository(_connectionString, new CategoriesRepository(_connectionString)).Delete(user);
             }
         }
     }
