@@ -1,15 +1,15 @@
 ﻿using OakNotes.DataLayer;
 using OakNotes.DataLayer.Sql;
 using OakNotes.Model;
+using OakNotes.Logger;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
+using OakNotes.Api.Filters;
 
 namespace OakNotes.Api.Controllers
 {
+    [RepositoryExceptionFilter]
     public class NotesController : ApiController
     {
         private const string _connectionString = @"Data Source=DESKTOP-8E5V1RN\SQLEXPRESS;Database=development;Trusted_connection=true";
@@ -33,6 +33,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes")]
         public Note Create([FromBody] Note note)
         {
+            Log.Intance.Info("Создается запись {0} пользователя {1}", note.Id, note.Owner.Id);
             return _notesRepository.Create(note);
         }
 
@@ -45,6 +46,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}")]
         public Note Get(Guid noteId)
         {
+            Log.Intance.Info("Возращается запись с id {0}", noteId);
             return _notesRepository.Get(noteId);
         }
 
@@ -56,6 +58,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}")]
         public void Delete(Guid noteId)
         {
+            Log.Intance.Info("Удаляется запись с id: {0}", noteId);
             _notesRepository.Delete(noteId);
         }
 
@@ -68,6 +71,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes")]
         public Note Update([FromBody] Note note)
         {
+            Log.Intance.Info("Обновляется запись с id: {0}", note.Id);
             return _notesRepository.Update(note);
         }
 
@@ -80,6 +84,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/categories/{categoryId}")]
         public void AssignNoteCategory(Guid noteId, Guid categoryId)
         {
+            Log.Intance.Info("Записи с id: {0} назначается категория: {1}", noteId, categoryId);
             _categoriesRepository.Assign(noteId, categoryId);
         }
 
@@ -92,6 +97,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/categories/{categoryId}")]
         public void DissociateCategoryFromNote(Guid noteId, Guid categoryId)
         {
+            Log.Intance.Info("У записи с id: {0} удаляется категория {1}", noteId, categoryId);
             _categoriesRepository.Dissociate(noteId, categoryId);
         }
 
@@ -104,6 +110,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/categories")]
         public IEnumerable<Category> GetNoteCategories(Guid noteId)
         {
+            Log.Intance.Info("Возвращается список категорий записи с id: {0}", noteId);
             return _categoriesRepository.GetNoteCategories(noteId);
         }
 
@@ -116,6 +123,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/shares/{userId}")]
         public void ShareNote(Guid noteId, Guid userId)
         {
+            Log.Intance.Info("Пользователю c id: {id} открыватеся доступ к записи c id: {1}", userId, noteId);
             _notesRepository.Share(noteId, userId);
         }
 
@@ -128,6 +136,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/shares/{userId}")]
         public void UnshareNote(Guid noteId, Guid userId)
         {
+            Log.Intance.Info("У пользователя с id: {0} убирается доступ к записи с id: {1}", userId, noteId);
             _notesRepository.Unshare(noteId, userId);
         }
 
@@ -139,6 +148,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/notes/{noteId}/shares")]
         public IEnumerable<User> GetShares(Guid noteId)
         {
+            Log.Intance.Info("Возвращается список всех пользователей, у которых есть доступ к записи с id: {0}", noteId);
             return _usersRepository.GetNoteShares(noteId);
         }
     }

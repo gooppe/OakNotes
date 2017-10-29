@@ -48,6 +48,9 @@
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.5\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.12\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Web.DynamicData" />
     <Reference Include="System.Web.Entity" />
@@ -89,12 +92,19 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\NotesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Filters\RepositoryExceptionFilterAttribute.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -115,6 +125,10 @@
     <ProjectReference Include="..\OakNotes.DataLayer\OakNotes.DataLayer.csproj">
       <Project>{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}</Project>
       <Name>OakNotes.DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OakNotes.Logger\OakNotes.Logger.csproj">
+      <Project>{834d350c-fe65-44ca-a55b-11e14557d167}</Project>
+      <Name>OakNotes.Logger</Name>
     </ProjectReference>
     <ProjectReference Include="..\OakNotes.Model\OakNotes.Model.csproj">
       <Project>{d27d4dc8-a707-4edf-8b51-e20f9acf218e}</Project>

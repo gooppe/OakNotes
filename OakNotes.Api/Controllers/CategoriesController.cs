@@ -1,12 +1,14 @@
 ﻿using OakNotes.DataLayer;
 using OakNotes.DataLayer.Sql;
 using OakNotes.Model;
+using OakNotes.Logger;
 using System;
-using System.Collections.Generic;
 using System.Web.Http;
+using OakNotes.Api.Filters;
 
 namespace OakNotes.Api.Controllers
 {
+    [RepositoryExceptionFilter]
     public class CategoriesController : ApiController
     {
         private const string _connectionString = @"Data Source=DESKTOP-8E5V1RN\SQLEXPRESS;Database=development;Trusted_connection=true";
@@ -25,6 +27,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/categories/{categoryId}")]
         public void Delete(Guid categoryId)
         {
+            Log.Intance.Info("Удаляется категория с id: {0}", categoryId);
             _categoriesRepository.Delete(categoryId);
         }
 
@@ -37,6 +40,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/categories/{categoryId}")]
         public Category Get(Guid categoryId)
         {
+            Log.Intance.Info("Возвращается категория с id: {id}");
             return _categoriesRepository.Get(categoryId);
         }
 
@@ -49,6 +53,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/categories")]
         public Category Update([FromBody] Category category)
         {
+            Log.Intance.Info("Обновляется категория с id: {0}", category.Id);
             return _categoriesRepository.Update(category);
         }
     }

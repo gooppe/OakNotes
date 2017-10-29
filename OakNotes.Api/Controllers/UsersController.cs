@@ -4,9 +4,12 @@ using OakNotes.Model;
 using System;
 using System.Collections.Generic;
 using System.Web.Http;
+using OakNotes.Logger;
+using OakNotes.Api.Filters;
 
 namespace OakNotes.Api.Controllers
 {
+    [RepositoryExceptionFilter]
     public class UsersController : ApiController
     {
         private const string _connectionString = @"Data Source=DESKTOP-8E5V1RN\SQLEXPRESS;Database=development;Trusted_connection=true";
@@ -30,6 +33,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{id}")]
         public User Get(Guid id)
         {
+            Log.Intance.Info("Возвращается пользователь c id: {0}", id);
             return _usersRepository.Get(id);
         }
 
@@ -42,6 +46,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users")]
         public User Post([FromBody] User user)
         {
+            Log.Intance.Info("Создание пользователя с именем: {0}", user.Name);
             return _usersRepository.Create(user);
         }
 
@@ -53,6 +58,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{id}")]
         public void Delete(Guid id)
         {
+            Log.Intance.Info("Удаляется пользователь с id: {0}", id);
             _usersRepository.Delete(id);
         }
 
@@ -65,6 +71,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{id}/categories")]
         public IEnumerable<Category> GetUserCategories(Guid id)
         {
+            Log.Intance.Info("Возвращается список категорий пользователя с id: {0}", id);
             return _categoriesRepository.GetUserCategories(id);
         }
 
@@ -78,6 +85,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{userId}/categories")]
         public Category Create(Guid userId, Category category)
         {
+            Log.Intance.Info("Создается категория: \"{0}\" для пользователя с id: {1}", category.Name, userId);
             return _categoriesRepository.Create(category, userId);
         }
 
@@ -90,6 +98,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{userId}/shared")]
         public IEnumerable<Note> GetSharedNotes(Guid userId)
         {
+            Log.Intance.Info("Возвращается список записей пользователя с id: {0}", userId);
             return _notesRepository.GetSharedNotes(userId);
         }
 
@@ -102,6 +111,7 @@ namespace OakNotes.Api.Controllers
         [Route("api/users/{userId}/notes")]
         public IEnumerable<Note> GetUserNotes(Guid userId)
         {
+            Log.Intance.Info("Возвращается список записей пользователя c id: {0}", userId);
             return _notesRepository.GetUserNotes(userId);
         }
     }
