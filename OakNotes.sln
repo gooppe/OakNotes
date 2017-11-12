@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.16
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.DataLayer.Sql", "OakNotes.DataLayer.Sql\OakNotes.DataLayer.Sql.csproj", "{9B2BACA3-5BB8-41D5-B3BB-1D98A87A4C33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.DataLayer.Sql.Tests", "OakNotes.DataLayer.Sql.Tests\OakNotes.DataLayer.Sql.Tests.csproj", "{F60F763B-D281-4197-A3C8-2D08EF58607D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.Model", "OakNotes.Model\OakNotes.Model.csproj", "{D27D4DC8-A707-4EDF-8B51-E20F9ACF218E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.DataLayer", "OakNotes.DataLayer\OakNotes.DataLayer.csproj", "{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.Api", "OakNotes.Api\OakNotes.Api.csproj", "{F5E76996-F653-467E-8857-81EC72072CC3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.Logger", "OakNotes.Logger\OakNotes.Logger.csproj", "{834D350C-FE65-44CA-A55B-11E14557D167}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OakNotes.Client", "OakNotes.Client\OakNotes.Client.csproj", "{F674F2CD-D669-43D6-AC25-F4E7EC3213D2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B2BACA3-5BB8-41D5-B3BB-1D98A87A4C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B2BACA3-5BB8-41D5-B3BB-1D98A87A4C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B2BACA3-5BB8-41D5-B3BB-1D98A87A4C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B2BACA3-5BB8-41D5-B3BB-1D98A87A4C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F60F763B-D281-4197-A3C8-2D08EF58607D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F60F763B-D281-4197-A3C8-2D08EF58607D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F60F763B-D281-4197-A3C8-2D08EF58607D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F60F763B-D281-4197-A3C8-2D08EF58607D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D27D4DC8-A707-4EDF-8B51-E20F9ACF218E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D27D4DC8-A707-4EDF-8B51-E20F9ACF218E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D27D4DC8-A707-4EDF-8B51-E20F9ACF218E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D27D4DC8-A707-4EDF-8B51-E20F9ACF218E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2083DC9-7DEC-46E0-BB9F-BE0E61A5A471}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5E76996-F653-467E-8857-81EC72072CC3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5E76996-F653-467E-8857-81EC72072CC3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5E76996-F653-467E-8857-81EC72072CC3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5E76996-F653-467E-8857-81EC72072CC3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{834D350C-FE65-44CA-A55B-11E14557D167}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{834D350C-FE65-44CA-A55B-11E14557D167}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{834D350C-FE65-44CA-A55B-11E14557D167}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{834D350C-FE65-44CA-A55B-11E14557D167}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F674F2CD-D669-43D6-AC25-F4E7EC3213D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F674F2CD-D669-43D6-AC25-F4E7EC3213D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F674F2CD-D669-43D6-AC25-F4E7EC3213D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F674F2CD-D669-43D6-AC25-F4E7EC3213D2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {100BEF44-84D1-49A6-A83D-FE0D3E56384C}
+	EndGlobalSection
+EndGlobal
