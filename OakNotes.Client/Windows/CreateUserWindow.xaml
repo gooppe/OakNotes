@@ -1,0 +1,19 @@
+﻿<Window x:Class="OakNotes.Client.Windows.CreateUserWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:OakNotes.Client.Windows"
+        WindowStartupLocation="CenterOwner"
+        ResizeMode="CanMinimize"
+        mc:Ignorable="d"
+        Title="CreateUserWindow" Height="130" Width="310">
+    <Grid>
+        <Label Content="Ваше имя:" VerticalAlignment="Top" Margin="10,10,0,0" HorizontalAlignment="Left" Width="85" HorizontalContentAlignment="Right"/>
+        <TextBox Name="UserNameTextBox" VerticalAlignment="Top" HorizontalAlignment="Right" Width="184" Margin="0,14,10,0"/>
+        <Label Content="Ваше логин:" VerticalAlignment="Top" Margin="10,33,0,0" HorizontalAlignment="Left" Width="85" HorizontalContentAlignment="Right"/>
+        <TextBox x:Name="LoginTextBox" VerticalAlignment="Top" HorizontalAlignment="Right" Width="184" Margin="0,37,10,0"/>
+        <Button Content="Зарегистрироваться" HorizontalAlignment="Left" Margin="92,62,0,0" VerticalAlignment="Top" Width="127" IsDefault="True" Click="RegisterClick"/>
+        <Button Content="Отмена" HorizontalAlignment="Left" Margin="224,62,0,0" VerticalAlignment="Top" Width="60" IsCancel="True" Click="CancelClick"/>
+    </Grid>
+</Window>
