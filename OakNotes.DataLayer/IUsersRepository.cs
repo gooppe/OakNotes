@@ -8,6 +8,7 @@ namespace OakNotes.DataLayer
     {
         User Create(User user);
         User Get(Guid id);
+        User Get(string login);
         void Delete(Guid id);
         IEnumerable<User> GetNoteShares(Guid noteId);
     }

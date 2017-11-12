@@ -195,7 +195,7 @@ namespace OakNotes.DataLayer.Sql
                 sqlConnection.Open();
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
-                    sqlCommand.CommandText = "select id, ownerId, title, text, created, updated from notes where ownerId = @userId";
+                    sqlCommand.CommandText = "select id, ownerId, title, text, created, updated from notes where ownerId = @userId order by created asc";
                     sqlCommand.Parameters.AddWithValue("@userId", userId);
 
                     using (var reader = sqlCommand.ExecuteReader())

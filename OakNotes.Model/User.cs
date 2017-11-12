@@ -9,6 +9,8 @@ namespace OakNotes.Model
 
         public string Name { get; set; }
 
+        public string Login { get; set; }
+
         public IEnumerable<Category> Categories { get; set; }
     }
 }

@@ -38,6 +38,19 @@ namespace OakNotes.Api.Controllers
         }
 
         /// <summary>
+        /// Get user by login
+        /// </summary>
+        /// <param name="login">User login</param>
+        /// <returns>User</returns>
+        [HttpGet]
+        [Route("api/users/login/{login}")]
+        public User Get(string login)
+        {
+            Log.Intance.Info("Возвращается пользователь c id: {0}", login);
+            return _usersRepository.Get(login);
+        }
+
+        /// <summary>
         /// Create user
         /// </summary>
         /// <param name="user">User</param>

@@ -18,7 +18,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -48,7 +49,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -78,7 +80,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -116,7 +119,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -127,7 +131,8 @@ namespace OakNotes.DataLayer.Sql.Tests
 
             var secondUser = new User()
             {
-                Name = "second user"
+                Name = "second user",
+                Login = "secondtest"
             };
 
             //act
@@ -154,7 +159,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -165,7 +171,8 @@ namespace OakNotes.DataLayer.Sql.Tests
 
             var secondUser = new User()
             {
-                Name = "second user"
+                Name = "second user",
+                Login = "secondtest"
             };
 
 
@@ -196,7 +203,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -207,7 +215,8 @@ namespace OakNotes.DataLayer.Sql.Tests
 
             var secondUser = new User()
             {
-                Name = "second user"
+                Name = "second user",
+                Login = "secondtest"
             };
 
 
@@ -236,7 +245,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -275,7 +285,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -313,7 +324,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()
@@ -324,7 +336,8 @@ namespace OakNotes.DataLayer.Sql.Tests
 
             var secondUser = new User()
             {
-                Name = "second user"
+                Name = "second user",
+                Login = "secondtest"
             };
 
 
@@ -353,7 +366,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             var note = new Note()

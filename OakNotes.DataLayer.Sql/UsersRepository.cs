@@ -30,9 +30,10 @@ namespace OakNotes.DataLayer.Sql
                 {
                     user.Id = Guid.NewGuid();
                         
-                    command.CommandText = "insert into users (id, name) values (@id, @name)";
+                    command.CommandText = "insert into users (id, name, login) values (@id, @name, @login)";
                     command.Parameters.AddWithValue("@id", user.Id);
                     command.Parameters.AddWithValue("@name", user.Name);
+                    command.Parameters.AddWithValue("@login", user.Login);
                     command.ExecuteNonQuery();
                     return user;
                 }
@@ -70,7 +71,7 @@ namespace OakNotes.DataLayer.Sql
                 sqlConnection.Open();
                 using (var command = sqlConnection.CreateCommand())
                 {
-                    command.CommandText = "select id, name from users where id = @id";
+                    command.CommandText = "select id, name, login from users where id = @id";
                     command.Parameters.AddWithValue("@id", id);
 
                     using (var reader = command.ExecuteReader())
@@ -81,7 +82,42 @@ namespace OakNotes.DataLayer.Sql
                         var user = new User
                         {
                             Id = reader.GetGuid(reader.GetOrdinal("id")),
-                            Name = reader.GetString(reader.GetOrdinal("name"))
+                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Login = reader.GetString(reader.GetOrdinal("login"))
+                        };
+
+                        user.Categories = _categoriesRepository.GetUserCategories(user.Id);
+                        return user;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get user from database
+        /// </summary>
+        /// <param name="id">User Id</param>
+        /// <returns>User</returns>
+        public User Get(String name)
+        {
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+                using (var command = sqlConnection.CreateCommand())
+                {
+                    command.CommandText = "select id, name, login from users where login = @login";
+                    command.Parameters.AddWithValue("@login", name);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (!reader.Read())
+                            throw new ArgumentException($"User with login {name} not found");
+
+                        var user = new User
+                        {
+                            Id = reader.GetGuid(reader.GetOrdinal("id")),
+                            Name = reader.GetString(reader.GetOrdinal("name")),
+                            Login = reader.GetString(reader.GetOrdinal("login"))
                         };
 
                         user.Categories = _categoriesRepository.GetUserCategories(user.Id);
@@ -103,7 +139,7 @@ namespace OakNotes.DataLayer.Sql
                 sqlConnection.Open();
                 using (var sqlCommand = sqlConnection.CreateCommand())
                 {
-                    sqlCommand.CommandText = "select userId, name from shares inner join users on shares.userid = users.id where noteId = @noteId";
+                    sqlCommand.CommandText = "select userId, name, login from shares inner join users on shares.userid = users.id where noteId = @noteId";
                     sqlCommand.Parameters.AddWithValue("@noteId", noteId);
 
                     using (var reader = sqlCommand.ExecuteReader())
@@ -113,7 +149,8 @@ namespace OakNotes.DataLayer.Sql
                             var user = new User
                             {
                                 Id = reader.GetGuid(reader.GetOrdinal("userId")),
-                                Name = reader.GetString(reader.GetOrdinal("name"))
+                                Name = reader.GetString(reader.GetOrdinal("name")),
+                                Login = reader.GetString(reader.GetOrdinal("login"))
                             };
 
                             user.Categories = _categoriesRepository.GetUserCategories(user.Id);

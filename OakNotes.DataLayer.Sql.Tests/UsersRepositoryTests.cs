@@ -18,7 +18,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             //act
@@ -32,12 +33,33 @@ namespace OakNotes.DataLayer.Sql.Tests
         }
 
         [TestMethod]
+        public void ShouldGetUserByName()
+        {
+            //arrange
+            var user = new User
+            {
+                Name = "test",
+                Login = "test"
+            };
+
+            //act
+            var userRepository = new UsersRepository(_connectionString, new CategoriesRepository(_connectionString));
+            user = userRepository.Create(user);
+            _tempUsers.Add(user.Id);
+            var createdUser = userRepository.Get(user.Login);
+
+            //assert
+            Assert.AreEqual(user.Name, createdUser.Name);
+        }
+
+        [TestMethod]
         public void ShouldDeleteUser()
         {
             //arrange
             var user = new User
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
 
             //act
@@ -56,7 +78,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {

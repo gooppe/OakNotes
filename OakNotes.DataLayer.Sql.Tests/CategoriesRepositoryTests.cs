@@ -18,7 +18,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -44,7 +45,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -71,7 +73,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -107,7 +110,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -144,7 +148,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -180,7 +185,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
@@ -207,7 +213,8 @@ namespace OakNotes.DataLayer.Sql.Tests
             //arrange
             var user = new User()
             {
-                Name = "test"
+                Name = "test",
+                Login = "test"
             };
             var category = new Category()
             {
